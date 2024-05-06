@@ -3,6 +3,7 @@ package main
 import (
 	"Genitive/cmd/api/app"
 	"Genitive/config"
+	"Genitive/services"
 	"flag"
 	log "github.com/sirupsen/logrus"
 	"os"
@@ -51,5 +52,6 @@ func getCallerAbPath() string {
 func main() {
 	// 解析配置文件
 	config.InitConfig(ConfDir + "/config.yaml")
+	go services.Runbevm()
 	app.Run()
 }
