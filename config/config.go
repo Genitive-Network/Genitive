@@ -10,6 +10,8 @@ type Options struct {
 	Threshold       float64
 	ContractAddress string
 	UserAddress     string
+	PrivateKey      string
+	BevmRpc         string
 }
 
 // 读取iam.yml文件，生成options需要的结果
@@ -24,6 +26,8 @@ func NewOption(path string) (*Options, error) {
 		Threshold:       viper.GetFloat64("threshold"),
 		ContractAddress: viper.GetString("contract_address"),
 		UserAddress:     viper.GetString("user_address"),
+		PrivateKey:      viper.GetString("private_key"),
+		BevmRpc:         viper.GetString("bevm_rpc"),
 	}, nil
 }
 

@@ -6,8 +6,8 @@ import (
 )
 
 type GenitiveMintReq struct {
-	Address string `json:"address"`
-	Amount  string `json:"amount"`
+	Address string `json:"address" binding:"required"`
+	Amount  int64  `json:"amount" binding:"required"`
 }
 
 func (r *RestHandler) Mint(ctx *gin.Context) {
@@ -20,23 +20,41 @@ func (r *RestHandler) Mint(ctx *gin.Context) {
 
 	services.Mint(req.Address, req.Amount)
 
-	var data = "成功"
+	var data = StatusResp{Status: false}
+	err := services.Mint(req.Address, req.Amount)
+	if err != nil {
+		ErrorResponse(ctx, err)
+		return
+	}
+	data.Status = true
 	SuccessResponse(ctx, data, "Success")
 
 }
 
 type GenitiveBurnReq struct {
+	Address string `json:"address" binding:"required"`
+	Amount  int64  `json:"amount" binding:"required"`
 }
 
 func (r *RestHandler) Burn(ctx *gin.Context) {
 	req := GenitiveBurnReq{}
+	var data = StatusResp{Status: false}
 	if err := ctx.ShouldBind(&req); err != nil {
 		ErrorResponse(ctx, err)
 		return
 	}
 
 	// business logic
-	services.Burn()
-	var data = ""
+	err := services.Burn(req.Address, req.Amount)
+	if err != nil {
+		ErrorResponse(ctx, err)
+		return
+	}
+	data.Status = true
+
 	SuccessResponse(ctx, data, "Success")
+}
+
+type StatusResp struct {
+	Status bool `json:"status"`
 }

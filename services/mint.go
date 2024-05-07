@@ -16,16 +16,16 @@ import (
 	"os"
 )
 
-func Mint(address, _amount string) error {
+func Mint(address string, amount int64) error {
 	dir, err := os.Getwd()
 	fmt.Println(dir + "/config/example.env")
 	if err := godotenv.Load(dir + "/example.env"); err != nil {
 		fmt.Errorf(err.Error())
 		return err
 	}
-	privateKeyString := os.Getenv("BEVM_DEV_PRIVATE_KEY")
+	privateKeyString := config.GetConfig().Options.PrivateKey
 
-	client, err := ethclient.Dial("wss://testnet.bevm.io/ws")
+	client, err := ethclient.Dial(config.GetConfig().Options.BevmRpc)
 	if err != nil {
 		return err
 	}
@@ -58,11 +58,12 @@ func Mint(address, _amount string) error {
 	auth.GasLimit = uint64(300000) // in units
 	auth.GasPrice = gasPrice
 
-	amount := decimal.NewFromBigInt(big.NewInt(10), 18).BigInt()
-	to := common.HexToAddress(config.GetConfig().Options.UserAddress)
+	amountData := decimal.NewFromBigInt(big.NewInt(amount), 18).BigInt()
+
+	to := common.HexToAddress(address)
 
 	contractInstance, err := NewXbtc(contractAddress, client)
-	tx, err := contractInstance.Mint(auth, to, amount)
+	tx, err := contractInstance.Mint(auth, to, amountData)
 	if err != nil {
 		return ErrFailedExtractToken
 	} else {
