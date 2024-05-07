@@ -16,7 +16,13 @@
   - amount bigint [金额 btc 8位对齐]
 - response result
   - status bool [true 成功 false 失败 ]
-
+```json 
+{
+  "code": 200,
+  "data": {"status": false},
+  "message": "成功"
+}
+```
 成功返回状态码200， 成功
 
 /api/burn
