@@ -11,7 +11,11 @@
 接口：
 
 /api/mint 
-
+- request pamram
+  - address string [地址]
+  - amount decimal [金额]
+- response result
+  - status bool [true 成功 false 失败 ]
 /api/burn
 
 方法：
