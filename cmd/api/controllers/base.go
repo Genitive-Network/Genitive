@@ -8,7 +8,7 @@ import (
 
 const APIV1 = "api/v1"
 
-const SuccessCode = 0
+const SuccessCode = 200
 
 type Response struct {
 	Code      int         `json:"result"`

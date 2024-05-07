@@ -17,6 +17,8 @@
 - response result
   - status bool [true 成功 false 失败 ]
 
+成功返回状态码200， 成功
+
 /api/burn
 
 方法：

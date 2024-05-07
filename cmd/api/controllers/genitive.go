@@ -6,6 +6,8 @@ import (
 )
 
 type GenitiveMintReq struct {
+	Address string `json:"address"`
+	Amount  string `json:"amount"`
 }
 
 func (r *RestHandler) Mint(ctx *gin.Context) {
@@ -16,9 +18,9 @@ func (r *RestHandler) Mint(ctx *gin.Context) {
 		return
 	}
 
-	services.Mint()
+	services.Mint(req.Address, req.Amount)
 
-	var data = ""
+	var data = "成功"
 	SuccessResponse(ctx, data, "Success")
 
 }

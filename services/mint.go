@@ -4,6 +4,7 @@ import (
 	"Genitive/config"
 	"context"
 	"crypto/ecdsa"
+	"errors"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -11,16 +12,15 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/joho/godotenv"
 	"github.com/shopspring/decimal"
-	"log"
 	"math/big"
 	"os"
 )
 
-func Mint() error {
+func Mint(address, _amount string) error {
 	dir, err := os.Getwd()
 	fmt.Println(dir + "/config/example.env")
 	if err := godotenv.Load(dir + "/example.env"); err != nil {
-		log.Fatal(err)
+		fmt.Errorf(err.Error())
 		return err
 	}
 	privateKeyString := os.Getenv("BEVM_DEV_PRIVATE_KEY")
@@ -36,12 +36,14 @@ func Mint() error {
 	publicKey := privateKey.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
 	if !ok {
-		log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+		fmt.Errorf("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+		return errors.New("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
 	}
 
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
 	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
 	if err != nil {
+		fmt.Errorf("error:", err)
 		return err
 	}
 
