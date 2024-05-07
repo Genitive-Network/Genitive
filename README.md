@@ -16,6 +16,7 @@
   - amount decimal [金额]
 - response result
   - status bool [true 成功 false 失败 ]
+
 /api/burn
 
 方法：
