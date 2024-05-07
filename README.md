@@ -13,7 +13,7 @@
 /api/mint 
 - request pamram
   - address string [地址]
-  - amount decimal [金额]
+  - amount bigint [金额 btc 8位对齐]
 - response result
   - status bool [true 成功 false 失败 ]
 
