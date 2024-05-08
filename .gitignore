@@ -1,0 +1,7 @@
+.idea
+/logs/*
+vendor
+vendor/*
+*.iml
+.env
+dist
