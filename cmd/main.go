@@ -14,12 +14,9 @@ import (
 )
 
 var (
-	ConfDir string
+	confFile = flag.String("f", "conf/config.yaml", "set config file directory")
+	mode     = flag.String("mode", "api", "run mode,such as api, cron, queue")
 )
-
-func init() {
-	flag.StringVar(&ConfDir, "f", GetProjectRoot()+"/conf", "set config file directory")
-}
 
 func getBinAbPath() string {
 	exePath, err := os.Executable()
@@ -51,7 +48,8 @@ func getCallerAbPath() string {
 
 func main() {
 	// 解析配置文件
-	config.InitConfig(ConfDir + "/config.yaml")
+	flag.Parse()
+	config.InitConfig(*confFile)
 	go services.Runbevm()
 	app.Run()
 }

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"Genitive/config"
 	"context"
 	"fmt"
 	"github.com/ethereum/go-ethereum"
@@ -83,10 +84,9 @@ func Runbevm() {
 				"Transaction Value:", vLog.Topics[0].Hex(), vLog.Topics[1].Hex(), decimal.NewFromBigInt(transferEvent.Amount, -18).String(),
 			)
 
-			if vLog.Topics[0].Hex() == "Transfer" {
-				//if vLog.Topics[0].Hex() == "Transfer" && evn.address == to
+			if vLog.Topics[0].Hex() == "Transfer" && config.GetConfig().Options.UserAddress == vLog.Topics[2].Hex() {
+				// TODO if vLog.Topics[0].Hex() == "Transfer" && evn.address == to
 				// to 1
-
 				// bevm-> fhevm 用户 address 1.xbtc (to 2xbtc) 跨链 bevm 转账到 特定地址 调用fhevm mint 接口传递 用户地址及 对应的token 给fhevm  mint
 				// fhevm -> bevm 用户 address 1.xbtc (to 2xbtc) 跨链 fhevm 转账到 特定地址 调用bevm mint 接口传递 用户地址及 对应的token 给 bevm mint
 				// 交易特定地址 调用fhevm mint 接口传递 发起人 对应的token 给fhevm  mint

@@ -2,29 +2,20 @@ package services
 
 import (
 	"Genitive/config"
+	"context"
 	"crypto/ecdsa"
 	"fmt"
-	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
-	"math/big"
-	"os"
-
-	"context"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
-
-	"github.com/joho/godotenv"
+	log "github.com/sirupsen/logrus"
+	"math/big"
 )
 
-func Burn(address string, amount int64) error {
-	dir, err := os.Getwd()
-	if err := godotenv.Load(dir + "/config/example.env"); err != nil {
-		log.Error(err)
-		return err
-	}
+func Burn(address string, amount decimal.Decimal) error {
 	privateKeyString := config.GetConfig().Options.PrivateKey
 
 	client, err := ethclient.Dial(config.GetConfig().Options.BevmRpc)
@@ -62,7 +53,7 @@ func Burn(address string, amount int64) error {
 	auth.GasLimit = uint64(300000) // in units
 	auth.GasPrice = gasPrice
 
-	amountData := decimal.NewFromBigInt(big.NewInt(amount), 18).BigInt()
+	amountData := decimal.NewFromBigInt(amount.BigInt(), 8).BigInt()
 	to := common.HexToAddress(address)
 
 	contractInstance, err := NewXbtc(contractAddress, client)

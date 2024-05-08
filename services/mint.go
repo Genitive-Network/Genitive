@@ -10,26 +10,19 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/joho/godotenv"
 	"github.com/shopspring/decimal"
 	"math/big"
-	"os"
 )
 
-func Mint(address string, amount int64) error {
-	dir, err := os.Getwd()
-	fmt.Println(dir + "/config/example.env")
-	if err := godotenv.Load(dir + "/example.env"); err != nil {
-		fmt.Errorf(err.Error())
-		return err
-	}
+func Mint(address string, amount decimal.Decimal) error {
 	privateKeyString := config.GetConfig().Options.PrivateKey
 
 	client, err := ethclient.Dial(config.GetConfig().Options.BevmRpc)
 	if err != nil {
 		return err
 	}
-	contractAddress := common.HexToAddress(config.GetConfig().Options.ContractAddress)
+	contractString := config.GetConfig().Options.ContractAddress
+	contractAddress := common.HexToAddress(contractString)
 	//contractABI, err := abi.JSON(strings.NewReader(abiString))
 	privateKey, _ := crypto.HexToECDSA(privateKeyString)
 
@@ -58,8 +51,7 @@ func Mint(address string, amount int64) error {
 	auth.GasLimit = uint64(300000) // in units
 	auth.GasPrice = gasPrice
 
-	amountData := decimal.NewFromBigInt(big.NewInt(amount), 18).BigInt()
-
+	amountData := decimal.NewFromBigInt(amount.BigInt(), 8).BigInt()
 	to := common.HexToAddress(address)
 
 	contractInstance, err := NewXbtc(contractAddress, client)

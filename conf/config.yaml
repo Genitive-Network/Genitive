@@ -1,5 +1,5 @@
 threshold: 0.4
-contract_address: 0x30A0e025BE2bbC80948f60647c48756815b78227
-user_address: 0x8a43286e4B655D1f2Aae80F3F6108e455CC0f01d
-private_key: ""
+contract_address: 0x14D5d2da26D0f66b9A851CfDA1Dfa6CCDDE9DCEc
+user_address: 0x92FCD6763c42688A94EAc714F41146c80933F74e
+private_key: "2725f595d25a546f758a5bffddd101e0ac445d5aa5bbbddb63b7af56c977223d"
 bevm_rpc: "wss://testnet.bevm.io/ws"

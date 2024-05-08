@@ -3,11 +3,12 @@ package controllers
 import (
 	"Genitive/services"
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 )
 
 type GenitiveMintReq struct {
-	Address string `json:"address" binding:"required"`
-	Amount  int64  `json:"amount" binding:"required"`
+	Address string          `json:"address" binding:"required"`
+	Amount  decimal.Decimal `json:"amount" binding:"required"`
 }
 
 func (r *RestHandler) Mint(ctx *gin.Context) {
@@ -18,7 +19,7 @@ func (r *RestHandler) Mint(ctx *gin.Context) {
 		return
 	}
 
-	services.Mint(req.Address, req.Amount)
+	//services.Mint(req.Address, req.Amount)
 
 	var data = StatusResp{Status: false}
 	err := services.Mint(req.Address, req.Amount)
@@ -32,8 +33,8 @@ func (r *RestHandler) Mint(ctx *gin.Context) {
 }
 
 type GenitiveBurnReq struct {
-	Address string `json:"address" binding:"required"`
-	Amount  int64  `json:"amount" binding:"required"`
+	Address string          `json:"address" binding:"required"`
+	Amount  decimal.Decimal `json:"amount" binding:"required"`
 }
 
 func (r *RestHandler) Burn(ctx *gin.Context) {
