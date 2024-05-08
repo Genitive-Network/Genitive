@@ -3,3 +3,4 @@ contract_address: 0x14D5d2da26D0f66b9A851CfDA1Dfa6CCDDE9DCEc
 user_address: 0x92FCD6763c42688A94EAc714F41146c80933F74e
 private_key: "2725f595d25a546f758a5bffddd101e0ac445d5aa5bbbddb63b7af56c977223d"
 bevm_rpc: "wss://testnet.bevm.io/ws"
+fhevm_host: ""

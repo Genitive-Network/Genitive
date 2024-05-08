@@ -56,7 +56,7 @@ func Mint(address string, amount big.Int) error {
 	contractInstance, err := NewXbtc(contractAddress, client)
 	tx, err := contractInstance.Mint(auth, to, &amount)
 	if err != nil {
-		return ErrFailedExtractToken
+		return fmt.Errorf("ErrFailedExtractToken %v %v", ErrFailedExtractToken, err)
 	} else {
 		fmt.Println("tx sent: ", tx.Hash().Hex())
 	}

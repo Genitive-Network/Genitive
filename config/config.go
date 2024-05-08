@@ -12,6 +12,7 @@ type Options struct {
 	UserAddress     string
 	PrivateKey      string
 	BevmRpc         string
+	FhevmHost       string
 }
 
 // 读取iam.yml文件，生成options需要的结果
@@ -28,6 +29,7 @@ func NewOption(path string) (*Options, error) {
 		UserAddress:     viper.GetString("user_address"),
 		PrivateKey:      viper.GetString("private_key"),
 		BevmRpc:         viper.GetString("bevm_rpc"),
+		FhevmHost:       viper.GetString("fhevm_host"),
 	}, nil
 }
 
