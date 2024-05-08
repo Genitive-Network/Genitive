@@ -26,7 +26,9 @@ func Runbevm() {
 		log.Fatal(err)
 	}
 
-	contractAddress := common.HexToAddress("0x30A0e025BE2bbC80948f60647c48756815b78227")
+	fmt.Println(config.GetConfig().Options.ContractAddress)
+	contractAddress := common.HexToAddress(config.GetConfig().Options.ContractAddress)
+	//contractAddress := common.HexToAddress("0x30A0e025BE2bbC80948f60647c48756815b78227")
 	query := ethereum.FilterQuery{
 		Addresses: []common.Address{contractAddress},
 	}
@@ -91,7 +93,6 @@ func Runbevm() {
 				// fhevm -> bevm 用户 address 1.xbtc (to 2xbtc) 跨链 fhevm 转账到 特定地址 调用bevm mint 接口传递 用户地址及 对应的token 给 bevm mint
 				// 交易特定地址 调用fhevm mint 接口传递 发起人 对应的token 给fhevm  mint
 				//mint 成功后 这边做 to address 的token 回收 1.xbtc
-
 				transaction, _, err := client.TransactionByHash(context.Background(), vLog.TxHash)
 				if err != nil {
 					log.Fatal(err)
