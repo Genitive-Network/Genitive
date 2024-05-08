@@ -11,7 +11,6 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/shopspring/decimal"
 	"log"
 	"math/big"
 	"net/http"
@@ -27,7 +26,7 @@ var (
 func Runbevm() {
 	client, err := ethclient.Dial("wss://testnet.bevm.io/ws")
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	fmt.Println(config.GetConfig().Options.ContractAddress)
@@ -59,7 +58,7 @@ func Runbevm() {
 	for {
 		select {
 		case err := <-sub.Err():
-			log.Fatal(err)
+			log.Println(err)
 		case vLog := <-logs:
 
 			fmt.Println("Log Block Number:", vLog.BlockNumber)
@@ -84,17 +83,14 @@ func Runbevm() {
 			transferEvent.To = common.HexToAddress(vLog.Topics[2].Hex())
 
 			fmt.Println(
-				"event Transfer", transferEvent.From.Hex(), transferEvent.To.Hex(), transferEvent.Amount.String(),
-			)
-			fmt.Println(
-				"Transaction Value:",
-				vLog.Topics[0].Hex(),
-				vLog.Topics[1].Hex(),
-				decimal.NewFromBigInt(transferEvent.Amount, -18).String(),
+				"event Transfer",
+				transferEvent.From.Hex(),
+				transferEvent.To.Hex(),
+				transferEvent.Amount.String(),
 			)
 
-			if vLog.Topics[0].Hex() == "Transfer" && config.GetConfig().Options.UserAddress == vLog.Topics[2].Hex() {
-				// TODO if vLog.Topics[0].Hex() == "Transfer" && evn.address == to
+			checkAddress := common.HexToAddress(config.GetConfig().Options.UserAddress).Hex()
+			if transferEvent.To.Hex() == checkAddress {
 				// to 1
 				// bevm-> fhevm 用户 address 1.xbtc (to 2xbtc) 跨链 bevm 转账到 特定地址 调用fhevm mint 接口传递 用户地址及 对应的token 给fhevm  mint
 				// fhevm -> bevm 用户 address 1.xbtc (to 2xbtc) 跨链 fhevm 转账到 特定地址 调用bevm mint 接口传递 用户地址及 对应的token 给 bevm mint
@@ -109,14 +105,16 @@ func Runbevm() {
 				amount := transaction.Value()
 
 				bodyMap := make(map[string]interface{})
-				bodyMap["address"] = vLog.Topics[1].Hex()
-				bodyMap["amount"] = amount
+				bodyMap["address"] = transferEvent.From.Hex()
+				bodyMap["amount"] = transferEvent.Amount.Int64()
 				body, err := json.Marshal(bodyMap)
 
 				req, err := http.NewRequest(
-					http.MethodGet, config.GetConfig().Options.FhevmHost, bytes.NewBuffer(body),
+					http.MethodPost, config.GetConfig().Options.FhevmHost, bytes.NewBuffer(body),
 				)
-
+				cosHeader := make(http.Header)
+				cosHeader[`Content-Type`] = []string{"application/json; charset=UTF-8"}
+				req.Header = cosHeader
 				if err != nil {
 					log.Println("fhevm NewRequest err,", err)
 					break
