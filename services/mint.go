@@ -10,11 +10,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/shopspring/decimal"
 	"math/big"
 )
 
-func Mint(address string, amount decimal.Decimal) error {
+func Mint(address string, amount big.Int) error {
 	privateKeyString := config.GetConfig().Options.PrivateKey
 
 	client, err := ethclient.Dial(config.GetConfig().Options.BevmRpc)
@@ -51,11 +50,11 @@ func Mint(address string, amount decimal.Decimal) error {
 	auth.GasLimit = uint64(300000) // in units
 	auth.GasPrice = gasPrice
 
-	amountData := decimal.NewFromBigInt(amount.BigInt(), 8).BigInt()
+	//amountData := decimal.NewFromBigInt(amount.BigInt(), 8).BigInt()
 	to := common.HexToAddress(address)
 
 	contractInstance, err := NewXbtc(contractAddress, client)
-	tx, err := contractInstance.Mint(auth, to, amountData)
+	tx, err := contractInstance.Mint(auth, to, &amount)
 	if err != nil {
 		return ErrFailedExtractToken
 	} else {
