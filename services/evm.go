@@ -75,7 +75,7 @@ func Runbevm() {
 			receipt, err := client.TransactionReceipt(context.Background(), vLog.TxHash)
 			if err != nil {
 				log.Println("client.TransactionReceipt err ", err)
-				continue
+				break
 			}
 			fmt.Println("receipt :", receipt)
 			fmt.Println("--------------------------------------------------------------------------------", receipt)
@@ -83,6 +83,7 @@ func Runbevm() {
 			err = contractAbi.UnpackIntoInterface(&transferEvent, "Transfer", vLog.Data)
 			if err != nil {
 				log.Println("contractAbi.UnpackIntoInterface err ", err)
+				break
 			}
 
 			transferEvent.From = common.HexToAddress(vLog.Topics[1].Hex())
@@ -127,11 +128,12 @@ func Runbevm() {
 				}
 
 				res, err := httpClient.Do(req)
+				defer res.Body.Close()
 				if err != nil {
 					log.Println("fhevm request err,", err)
 					break
 				}
-				defer res.Body.Close()
+
 				log.Println("Transaction Amount: ", amount)
 			}
 		default:
