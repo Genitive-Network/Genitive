@@ -136,6 +136,8 @@ func Runbevm() {
 				defer res.Body.Close()
 				log.Println("Transaction Amount: ", amount)
 			}
+		default:
+			fmt.Println("pass")
 		}
 	}
 }
