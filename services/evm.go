@@ -36,18 +36,24 @@ func Runbevm() {
 		Addresses: []common.Address{contractAddress},
 	}
 
+	fmt.Println("1------------------")
 	logs := make(chan types.Log)
 	sub, err := client.SubscribeFilterLogs(context.Background(), query, logs)
+	fmt.Println("2------------------", err)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	dir, err := os.Getwd()
 	abiString, err := os.ReadFile(dir + "/config/abi.json")
+	fmt.Println("4------------------", err)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	defer sub.Unsubscribe()
 	contractAbi, err := abi.JSON(strings.NewReader(string(abiString)))
+	fmt.Println("5------------------", err)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,12 +61,14 @@ func Runbevm() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("6------------------")
 	for {
 		select {
 		case err := <-sub.Err():
+			fmt.Println("7------------------")
 			log.Println(err)
 		case vLog := <-logs:
-
+			fmt.Println("8------------------")
 			fmt.Println("Log Block Number:", vLog.BlockNumber)
 			fmt.Println("Log Index:", vLog.Index)
 			fmt.Println("Log Data:", vLog.Data)
