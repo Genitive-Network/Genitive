@@ -41,26 +41,23 @@ func Runbevm() {
 	sub, err := client.SubscribeFilterLogs(context.Background(), query, logs)
 	fmt.Println("2------------------", err)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("client.SubscribeFilterLogs  err ", err)
 	}
 
 	dir, err := os.Getwd()
 	abiString, err := os.ReadFile(dir + "/config/abi.json")
 	fmt.Println("4------------------", err)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("abiString, err := os.ReadFile  err ", err)
 	}
 
 	defer sub.Unsubscribe()
 	contractAbi, err := abi.JSON(strings.NewReader(string(abiString)))
 	fmt.Println("5------------------", err)
 	if err != nil {
-		log.Fatal(err)
+		log.Println("contractAbi  err ", err)
 	}
 
-	if err != nil {
-		log.Fatal(err)
-	}
 	fmt.Println("6------------------")
 	for {
 		select {
@@ -77,14 +74,15 @@ func Runbevm() {
 			fmt.Println("Log :", vLog)
 			receipt, err := client.TransactionReceipt(context.Background(), vLog.TxHash)
 			if err != nil {
-				log.Fatal(err)
+				log.Println("client.TransactionReceipt err ", err)
+				continue
 			}
 			fmt.Println("receipt :", receipt)
 			fmt.Println("--------------------------------------------------------------------------------", receipt)
 			var transferEvent LogTransfer
 			err = contractAbi.UnpackIntoInterface(&transferEvent, "Transfer", vLog.Data)
 			if err != nil {
-				log.Fatal(err)
+				log.Println("contractAbi.UnpackIntoInterface err ", err)
 			}
 
 			transferEvent.From = common.HexToAddress(vLog.Topics[1].Hex())
