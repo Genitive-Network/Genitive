@@ -29,17 +29,17 @@ func Runbevm() {
 		log.Println(err)
 	}
 
-	fmt.Println(config.GetConfig().Options.ContractAddress)
+	//fmt.Println(config.GetConfig().Options.ContractAddress)
 	contractAddress := common.HexToAddress(config.GetConfig().Options.ContractAddress)
 	//contractAddress := common.HexToAddress("0x30A0e025BE2bbC80948f60647c48756815b78227")
 	query := ethereum.FilterQuery{
 		Addresses: []common.Address{contractAddress},
 	}
 
-	fmt.Println("1------------------")
+	//fmt.Println("1------------------")
 	logs := make(chan types.Log)
 	sub, err := client.SubscribeFilterLogs(context.Background(), query, logs)
-	fmt.Println("2------------------", err)
+	//fmt.Println("2------------------", err)
 	if err != nil {
 		log.Println("client.SubscribeFilterLogs  err ", err)
 	}
@@ -136,8 +136,8 @@ func Runbevm() {
 
 				log.Println("Transaction Amount: ", amount)
 			}
-		default:
-			fmt.Println("pass")
+			//default:
+			//	fmt.Println("pass")
 		}
 	}
 }
